@@ -1,6 +1,6 @@
 class AminoAcid
 {
-    private String aminoAcid;
+    private char aminoAcid;
 
 
 
@@ -11,9 +11,9 @@ class AminoAcid
 
 
 
-    public AminoAcid(String inString)
+    public AminoAcid(char inChar)
     {
-        aminoAcid = inString;
+        aminoAcid = inChar;
     }
 
 }
@@ -39,6 +39,30 @@ class Peptide
     public Peptide(String inString)
     {
         peptide = inString;
+    }
+}
+
+
+
+
+
+
+class Protein
+{
+    private String protein;
+
+
+
+    public Protein()
+    {
+
+    }
+
+
+
+    public Protein(String inString)
+    {
+        protein = inString;
     }
 }
 
