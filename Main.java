@@ -23,6 +23,30 @@ class AminoAcid
 
 
 
+class Peptide
+{
+    private String peptide;
+
+
+
+    public Peptide()
+    {
+
+    }
+
+
+
+    public Peptide(String inString)
+    {
+        peptide = inString;
+    }
+}
+
+
+
+
+
+
 public class Main
 {
     public static void main(String[] args)
