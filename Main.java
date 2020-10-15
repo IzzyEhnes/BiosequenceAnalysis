@@ -133,6 +133,14 @@ class Protein
     {
         protein = inString;
     }
+
+
+
+    @Override
+    public String toString()
+    {
+        return protein;
+    }
 }
 
 
@@ -142,6 +150,16 @@ class Protein
 
 public class Main
 {
+    public static void printProteinList(ArrayList<Protein> inList)
+    {
+        for (Protein p : inList)
+        {
+            System.out.println(p);
+        }
+    }
+
+
+
     public static void main(String[] args)
     {
         Scanner scanner = new Scanner(System.in);
@@ -194,6 +212,8 @@ public class Main
             }
         }
 
-        targetPeptide.findPotentialMatches();
+        printProteinList(proteinList);
+
+        //targetPeptide.findPotentialMatches();
     }
 }
