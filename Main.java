@@ -1,4 +1,7 @@
 import java.util.Scanner;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 
 
@@ -147,6 +150,49 @@ public class Main
         Peptide targetPeptide = new Peptide(scanner.nextLine());
 
         System.out.println(targetPeptide);
+
+        System.out.print("Please enter a filename: ");
+        String fileName = scanner.nextLine();
+
+        scanner.close();
+        scanner = null;
+
+
+
+        Scanner fileReader = null;
+        try
+        {
+            fileReader = new Scanner(new File(fileName));
+        }
+
+        catch (FileNotFoundException fileError)
+        {
+            System.out.println(String.format("There was a problem opening file \"%s\": error = %s", fileName, fileError.getMessage()));
+
+            System.out.println("Exiting program...");
+
+            System.exit(1);
+        }
+
+
+
+        ArrayList<Protein> proteinList = new ArrayList();
+        while (fileReader.hasNextLine())
+        {
+            String line = fileReader.nextLine().trim();
+
+            // If the row is column names or is empty, skip it
+            if (line.charAt(0) == '#' || line.length() == 0)
+            {
+                continue;
+            }
+
+            else
+            {
+                Protein p = new Protein(line);
+                proteinList.add(p);
+            }
+        }
 
         targetPeptide.findPotentialMatches();
     }
