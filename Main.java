@@ -2,6 +2,7 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 
@@ -64,50 +65,69 @@ class Peptide
 
 
 
-    public ArrayList<String> findPotentialMatches(ArrayList<Protein> inList)
-    {
-        ArrayList<String> matches = new ArrayList<String>();
 
-        String protein = "YMKATWVDDAGHJIECQARNDW";
+
+
+    public HashMap<Protein, ArrayList<String>> findPotentialMatches(ArrayList<Protein> inList)
+    {
+        HashMap<Protein, ArrayList<String>> matches = new HashMap<Protein, ArrayList<String>>();
 
         String inPeptide = this.peptide;
 
         int peptideLength = peptide.length();
-        int proteinLength = protein.length();
 
         String proteinSubstring = "";
 
+        int row = 1;
         for (Protein currentProtein : inList)
         {
-            boolean match = false;
-            for (int i = 0; i < protein.length() && match == false; i++)
-            {
-                if (protein.charAt(i) == inPeptide.charAt(0))
-                {
-                    int endIndex = i + peptideLength;
+            row++;
 
-                    if (endIndex > protein.length())
+
+            int beginningIndex = 0;
+            int endIndex = 0;
+
+            boolean match = false;
+            for (int j = 0; j < currentProtein.getLength() && match == false; j++)
+            {
+                if (currentProtein.getProtein().charAt(j) == inPeptide.charAt(0))
+                {
+                    endIndex = j + peptideLength;
+
+                    if (endIndex > currentProtein.getLength())
                     {
-                        endIndex = proteinLength;
+                        endIndex = currentProtein.getLength();
                     }
 
-                    proteinSubstring = protein.substring(i, endIndex);
+                    proteinSubstring = currentProtein.getProtein().substring(j, endIndex);
 
-                    System.out.println("Protein substring");
-                    System.out.println(proteinSubstring);
+                    //System.out.println("Protein substring");
+                    //System.out.println(proteinSubstring);
 
                     match = isMatch(peptide, proteinSubstring);
+
+                    beginningIndex = j;
                 }
             }
 
             if (match)
             {
-                System.out.print(String.format("Peptide %s was found within protein %s", peptide, protein));
+                ArrayList<String> proteinData = new ArrayList<String>();
+
+                proteinData.add(peptide);
+                proteinData.add(Integer.toString(row));
+                proteinData.add(Integer.toString(beginningIndex));
+                proteinData.add(Integer.toString(endIndex));
+
+                matches.put(currentProtein, proteinData);
             }
         }
 
         return matches;
     }
+
+
+
 
 
 
@@ -172,6 +192,13 @@ class Protein
 
 
 
+    public int getLength()
+    {
+        return protein.length();
+    }
+
+
+
     @Override
     public String toString()
     {
@@ -191,6 +218,31 @@ public class Main
         for (Protein p : inList)
         {
             System.out.println(p);
+        }
+    }
+
+
+
+    public static void printHashMap(HashMap<Protein, ArrayList<String>> inMap)
+    {
+        for (Protein p : inMap.keySet())
+        {
+            System.out.print("\nProtein: ");
+            System.out.print(p.toString());
+
+            System.out.print("\nPeptide found: ");
+            System.out.print(inMap.get(p).get(0));
+
+            System.out.print("\nRow in original CSV: ");
+            System.out.print(inMap.get(p).get(1));
+
+            System.out.print("\nBeginning index: ");
+            System.out.print(inMap.get(p).get(2));
+
+            System.out.print("\nEnd index: ");
+            System.out.print(inMap.get(p).get(3));
+
+            System.out.println();
         }
     }
 
@@ -253,6 +305,11 @@ public class Main
 
         //printProteinList(proteinList);
 
-        //targetPeptide.findPotentialMatches();
+        HashMap<Protein, ArrayList<String>> matches = new HashMap<Protein, ArrayList<String>>();
+
+        matches = targetPeptide.findPotentialMatches(proteinList);
+
+        printHashMap(matches);
+
     }
 }
