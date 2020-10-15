@@ -49,8 +49,25 @@ class Peptide
 
 
 
-    public void findPotentialMatches()
+    public void setPeptide(String inString)
     {
+        peptide = inString;
+
+    }
+
+
+
+    public String getPeptide()
+    {
+        return peptide;
+    }
+
+
+
+    public ArrayList<String> findPotentialMatches(ArrayList<Protein> inList)
+    {
+        ArrayList<String> matches = new ArrayList<String>();
+
         String protein = "YMKATWVDDAGHJIECQARNDW";
 
         String inPeptide = this.peptide;
@@ -60,31 +77,36 @@ class Peptide
 
         String proteinSubstring = "";
 
-        boolean match = false;
-        for (int i = 0; i < protein.length() && match == false; i++)
+        for (Protein currentProtein : inList)
         {
-            if (protein.charAt(i) == inPeptide.charAt(0))
+            boolean match = false;
+            for (int i = 0; i < protein.length() && match == false; i++)
             {
-                int endIndex = i + peptideLength;
-
-                if (endIndex > protein.length())
+                if (protein.charAt(i) == inPeptide.charAt(0))
                 {
-                    endIndex = proteinLength;
+                    int endIndex = i + peptideLength;
+
+                    if (endIndex > protein.length())
+                    {
+                        endIndex = proteinLength;
+                    }
+
+                    proteinSubstring = protein.substring(i, endIndex);
+
+                    System.out.println("Protein substring");
+                    System.out.println(proteinSubstring);
+
+                    match = isMatch(peptide, proteinSubstring);
                 }
+            }
 
-                proteinSubstring = protein.substring(i, endIndex);
-
-                System.out.println("Protein substring");
-                System.out.println(proteinSubstring);
-
-                match = isMatch(peptide, proteinSubstring);
+            if (match)
+            {
+                System.out.print(String.format("Peptide %s was found within protein %s", peptide, protein));
             }
         }
 
-        if (match)
-        {
-            System.out.print(String.format("Peptide %s was found within protein %s", peptide, protein));
-        }
+        return matches;
     }
 
 
@@ -136,6 +158,20 @@ class Protein
 
 
 
+    public void setProtein(String inString)
+    {
+        protein = inString;
+    }
+
+
+
+    public String getProtein()
+    {
+        return protein;
+    }
+
+
+
     @Override
     public String toString()
     {
@@ -178,11 +214,13 @@ public class Main
 
 
         Scanner fileReader = null;
+        // Try opening file fileName
         try
         {
             fileReader = new Scanner(new File(fileName));
         }
 
+        // If file cannot be opened, display error and exit program
         catch (FileNotFoundException fileError)
         {
             System.out.println(String.format("There was a problem opening file \"%s\": error = %s", fileName, fileError.getMessage()));
@@ -194,6 +232,7 @@ public class Main
 
 
 
+        // Read CSV file and add proteins to an ArrayList
         ArrayList<Protein> proteinList = new ArrayList();
         while (fileReader.hasNextLine())
         {
@@ -212,7 +251,7 @@ public class Main
             }
         }
 
-        printProteinList(proteinList);
+        //printProteinList(proteinList);
 
         //targetPeptide.findPotentialMatches();
     }
