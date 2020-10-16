@@ -1,6 +1,5 @@
+import java.io.*;
 import java.util.Scanner;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -213,6 +212,50 @@ class Protein
 
 public class Main
 {
+    static class CSV
+    {
+        public static void writeToCSV(HashMap<Protein, ArrayList<String>> inMap)
+        {
+            try
+            {
+                File csv = new File("/home/izzy/Desktop/Repos/BiosequenceAnalysis/output.csv");
+
+                csv.createNewFile();
+
+                FileWriter csvWriter = new FileWriter(csv);
+
+                csvWriter.append("PROTEIN").append(',');
+                csvWriter.append("PEPTIDE").append(',');
+                csvWriter.append("ROW").append(',');
+                csvWriter.append("BEGINNING INDEX").append(',');
+                csvWriter.append("END INDEX").append('\n');
+
+                for (Protein p : inMap.keySet())
+                {
+                    csvWriter.append(p.getProtein()).append(',');
+
+                    ArrayList<String> list = inMap.get(p);
+
+                    for (String s : list)
+                    {
+                        csvWriter.append(s).append(',');
+                    }
+
+                    csvWriter.append('\n');
+                }
+
+                csvWriter.flush();
+                csvWriter.close();
+            }
+
+            catch (IOException e)
+            {
+                System.out.println("Error creating or editing file: ");
+                e.printStackTrace();
+            }
+        }
+    }
+
     public static void printProteinList(ArrayList<Protein> inList)
     {
         for (Protein p : inList)
@@ -309,7 +352,9 @@ public class Main
 
         matches = targetPeptide.findPotentialMatches(proteinList);
 
-        printHashMap(matches);
+        //printHashMap(matches);
+        
+        CSV.writeToCSV(matches);
 
     }
 }
