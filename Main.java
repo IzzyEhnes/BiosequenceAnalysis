@@ -82,7 +82,6 @@ class Peptide
         {
             row++;
 
-
             int beginningIndex = 0;
             int endIndex = 0;
 
@@ -194,6 +193,26 @@ class Protein
     public int getLength()
     {
         return protein.length();
+    }
+
+
+
+    public int getNumberOfPeptides()
+    {
+        Protein inProtein = new Protein();
+        inProtein = this;
+
+        int count = 1;
+
+        for (int i = 0; i < inProtein.getLength(); i++)
+        {
+            if (inProtein.protein.charAt(i) == ' ')
+            {
+                count++;
+            }
+        }
+
+        return count;
     }
 
 
