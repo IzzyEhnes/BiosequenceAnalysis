@@ -77,6 +77,8 @@ class Peptide
 
         String proteinSubstring = "";
 
+        ArrayList<Peptide> peptideList = new ArrayList<>();
+
         int row = 1;
         for (Protein currentProtein : inList)
         {
@@ -213,6 +215,34 @@ class Protein
         }
 
         return count;
+    }
+
+
+
+    public ArrayList<Peptide> getPeptidesInProtein()
+    {
+        Protein inProtein = new Protein();
+        inProtein = this;
+
+        int length = inProtein.getNumberOfPeptides();
+
+        ArrayList<Peptide> peptideList = new ArrayList<>();
+
+        StringBuilder peptideBuilder = new StringBuilder();
+
+        for (int i = 0; i < inProtein.getLength(); i++)
+        {
+            peptideBuilder.append(inProtein.protein.charAt(i));
+
+            if (inProtein.protein.charAt(i) == ' ' || i == inProtein.getLength() - 1)
+            {
+                Peptide temp = new Peptide(peptideBuilder.toString());
+                peptideList.add(temp);
+                peptideBuilder.setLength(0);
+            }
+        }
+
+        return peptideList;
     }
 
 
