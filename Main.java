@@ -65,6 +65,27 @@ class Peptide
 
 
 
+    public int length()
+    {
+        return this.peptide.length();
+    }
+
+
+
+    public int findMax(int a, int b)
+    {
+        if (a > b)
+        {
+            return a;
+        }
+
+        else
+        {
+            return b;
+        }
+    }
+
+
 
 
     public HashMap<Protein, ArrayList<String>> findPotentialMatches(ArrayList<Protein> inList)
@@ -141,6 +162,77 @@ class Peptide
         else
         {
             return false;
+        }
+    }
+
+
+
+    public void getLongestCommonSubsequence(Peptide targetPeptide, Peptide inPeptide)
+    {
+        System.out.println(targetPeptide);
+        System.out.println(inPeptide);
+
+        int m = targetPeptide.length();
+        int n = inPeptide.length();
+
+        int[][] L = new int[m + 1][n + 1];
+
+        for (int i = 0; i <= m; i++)
+        {
+            for (int j = 0; j <= n; j++)
+            {
+                if (i == 0 || j == 0)
+                {
+                    L[i][j] = 0;
+                }
+
+                else if (targetPeptide.peptide.charAt(i - 1) == inPeptide.peptide.charAt(j - 1))
+                {
+                    L[i][j] = L[i - 1][j - 1] + 1;
+
+                }
+
+                else
+                {
+                    L[i][j] = findMax(L[i - 1][j], L[i][j - 1]);
+                }
+            }
+        }
+
+        int index = L[m][n];
+        int temp = index;
+
+        char[] LCS = new char[index + 1];
+        LCS[index] = '\n'; // set terminating char
+
+        int i = m;
+        int j = n;
+        while (i > 0 && j > 0)
+        {
+            if (targetPeptide.peptide.charAt(i - 1) == inPeptide.peptide.charAt(j - 1))
+            {
+                LCS[index - 1] = targetPeptide.peptide.charAt(i - 1);
+
+                i--;
+                j--;
+                index--;
+            }
+
+            else if (L[i - 1][j] > L[i][j - 1])
+            {
+                i--;
+            }
+
+            else
+            {
+                j--;
+            }
+        }
+
+        System.out.println("LCS of " + targetPeptide.peptide + " and " + inPeptide.peptide + " is ");
+        for (int k = 0; k <= temp; k++)
+        {
+            System.out.print(LCS[k]);
         }
     }
 
@@ -391,6 +483,13 @@ public class Main
     {
         Scanner scanner = new Scanner(System.in);
 
+        Peptide a = new Peptide("GILFPAILAK");
+        Peptide b = new Peptide("AL");
+
+        a.getLongestCommonSubsequence(a, b);
+
+
+        /*
         System.out.print("Please enter a peptide: ");
         Peptide targetPeptide = new Peptide(scanner.nextLine());
 
@@ -412,5 +511,7 @@ public class Main
         matches = targetPeptide.findPotentialMatches(proteinList);
 
         CSV.writeCSV(matches);
+
+         */
     }
 }
